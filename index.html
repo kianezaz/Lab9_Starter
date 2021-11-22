@@ -87,21 +87,164 @@
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+
   <script>
-    let form = document.querySelector('form');
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+    window.TrackJS && TrackJS.install({ 
+      token: "0bd241e9963e46bca961d29b13cc01c7"
+      // for more configuration options, see https://docs.trackjs.com
     });
+  </script>
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+  <script>
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+    window.addEventListener('DOMContentLoaded', init);
+
+    class BadCalculatorInput extends Error{
+      constructor(errMessage) {
+        super(errMessage);
+        this.name = "BadCalculatorInput";
+      }
+    }
+
+    function registerErrorHandler() {
+      if (window.onerror) {
+        console.log('Caught an error');
+      }
+    }
+
+    function init() {
+
+      let form = document.querySelector('form');
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        let output = document.querySelector('output');
+        let firstNum = document.querySelector('#first-num').value;
+        let secondNum = document.querySelector('#second-num').value;
+        let operator = document.querySelector('#operator').value;
+        if (operator === '/' && parseInt(secondNum) === 0) {
+          throw new BadCalculatorInput('Dividing by 0 is not allowed');
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      });
+
+      let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+
+      // Start your code here
+      // You may move this JS to another file if you wish
+
+      for (let i = 0; i < errorBtns.length; i++) {
+        const currBtn = errorBtns[i];
+        switch(currBtn.innerHTML) {
+          case 'Console Log':
+            currBtn.addEventListener('click', () => {
+              console.log('Console Log');
+            });
+            break;
+
+          case 'Console Error':
+            currBtn.addEventListener('click', () => {
+              console.error('Console Error');
+            });
+            break;
+
+          case 'Console Count':
+            currBtn.addEventListener('click', () => {
+              console.count('Console Count');
+            });
+            break;
+
+          case 'Console Warn':
+            currBtn.addEventListener('click', () => {
+              console.warn('Console Warn');
+            });
+            break;
+
+          case 'Console Assert':
+            currBtn.addEventListener('click', () => {
+              console.assert(2 === 3, '2 does not equal 3');
+            });
+            break;
+
+          case 'Console Clear':
+            currBtn.addEventListener('click', () => {
+              console.clear();
+            });
+            break;
+
+          case 'Console Dir':
+            currBtn.addEventListener('click', () => {
+              console.dir(currBtn);
+            });
+
+          case 'Console dirxml':
+            currBtn.addEventListener('click', () => {
+              console.dirxml(currBtn);
+            });
+            break;
+
+          case 'Console Group Start':
+            currBtn.addEventListener('click', () => {
+              console.group();
+            });
+            break;
+
+          case 'Console Group End':
+            currBtn.addEventListener('click', () => {
+              console.groupEnd();
+            });
+            break;
+
+          case 'Console Table':
+            const csClasses = [['Data Structures', 100], ['Algorithms', 101], ['Software Engineering', 110]];
+            currBtn.addEventListener('click', () => {
+              console.table(csClasses);
+            });
+            break;
+
+          case 'Start Timer':
+            currBtn.addEventListener('click', () => {
+              console.time();
+            });
+            break;
+
+          case 'End Timer':
+            currBtn.addEventListener('click', () => {
+              console.timeEnd();
+            });
+            break;
+
+          case 'Console Trace':
+            currBtn.addEventListener('click', () => {
+              console.trace();
+            });
+            break;
+
+          case 'Trigger a Global Error':
+            currBtn.addEventListener('click', () => {
+              triggerGlobalError();
+            });
+            break;
+
+        }
+      }
+
+      try {
+        const sum = 2 + someNumber;
+      }
+      catch(err) {
+        console.log(err);
+      }
+      finally {
+        console.log('Moving on from attempting to find the sum');
+      }
+
+      registerErrorHandler();
+
+      TrackJS.track('Testing TrackJS!');
+
+    }
+
   </script>
 </body>
 
